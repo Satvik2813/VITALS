@@ -1,0 +1,28 @@
+{
+  "name": "vitalis",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "frontend": "npm run dev --workspace apps/web",
+    "backend": "node scripts/python.mjs -m uvicorn app.main:app --app-dir apps/api --host 127.0.0.1 --port 8000",
+    "simulator": "node scripts/python.mjs scripts/simulator.py",
+    "test": "node scripts/python.mjs -m pytest apps/api/tests -q",
+    "lint": "node scripts/python.mjs -m ruff check apps/api scripts && npm run lint --workspace apps/web",
+    "build": "npm run build --workspace apps/web",
+    "fixtures": "node scripts/python.mjs scripts/generate_documents.py",
+    "test:e2e": "playwright test",
+    "format": "prettier --write apps/web scripts/*.mjs tests playwright.config.ts *.json docs/*.md README.md DEMO_SCRIPT.md && node scripts/python.mjs -m ruff format apps/api scripts",
+    "format:check": "prettier --check apps/web scripts/*.mjs tests playwright.config.ts *.json docs/*.md README.md DEMO_SCRIPT.md && node scripts/python.mjs -m ruff format --check apps/api scripts"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "prettier": "3.9.6"
+  }
+}

@@ -1,0 +1,37 @@
+name: VITALIS checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m venv .venv
+      - run: .venv/bin/python -m pip install -r apps/api/requirements.txt
+      - run: npm ci
+      - run: npm run fixtures
+      - run: npm test
+      - run: npm run lint
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Start local demo and run browser flow
+        run: |
+          npm run dev > /tmp/vitalis.log 2>&1 &
+          for attempt in $(seq 1 40); do curl --fail --silent http://127.0.0.1:3000/api/snapshot > /dev/null && break; sleep 2; done
+          mkdir -p data/qa
+          npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-failure
+          path: |
+            test-results
+            playwright-report

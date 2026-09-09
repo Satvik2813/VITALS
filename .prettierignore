@@ -1,0 +1,8 @@
+node_modules
+.venv
+.next
+data
+output
+package-lock.json
+supabase
+.pytest-work
