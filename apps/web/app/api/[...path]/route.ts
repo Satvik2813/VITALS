@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { access } from '../../../lib/auth';
+import { proxyIdentityHeaders } from '../../../lib/proxy-client-id';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 const allowed =
@@ -42,7 +43,7 @@ async function proxy(request: NextRequest, { params }: { params: Promise<{ path:
       }
       body = Buffer.concat(chunks);
     }
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = { ...proxyIdentityHeaders(request) };
     if (request.headers.has('content-type')) headers['Content-Type'] = request.headers.get('content-type')!;
     if (process.env.API_TOKEN) headers.Authorization = `Bearer ${process.env.API_TOKEN}`;
     const upstream = await fetch(`${process.env.BACKEND_URL || 'http://127.0.0.1:8000'}/api/${path}`, {
@@ -53,7 +54,7 @@ async function proxy(request: NextRequest, { params }: { params: Promise<{ path:
       signal: AbortSignal.timeout(20000),
     });
     const responseHeaders = new Headers({ 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
-    for (const name of ['content-type', 'content-disposition'])
+    for (const name of ['content-type', 'content-disposition', 'retry-after'])
       if (upstream.headers.has(name)) responseHeaders.set(name, upstream.headers.get(name)!);
     return new Response(upstream.body, { status: upstream.status, headers: responseHeaders });
   } catch {

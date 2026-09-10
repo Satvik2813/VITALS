@@ -1,6 +1,49 @@
 @import 'tailwindcss';
+
+/* =========================================================================
+   VITALIS design tokens (light + dark) — used by /, /login, /app/*
+   Legacy demo styles below (from `.app-shell` onwards) are untouched so the
+   original synthetic dashboard at /demo keeps working verbatim.
+   ========================================================================= */
+
 :root {
   color-scheme: light;
+  /* Brand */
+  --v-brand-1: #20e3c2;
+  --v-brand-2: #169bff;
+  --v-brand-3: #173cff;
+  --v-brand-gradient: linear-gradient(135deg, var(--v-brand-1) 0%, var(--v-brand-2) 55%, var(--v-brand-3) 100%);
+  /* Light surface */
+  --v-bg: #f6f9fc;
+  --v-surface: #ffffff;
+  --v-surface-2: #f1f5fa;
+  --v-surface-3: #e9eff6;
+  --v-text: #0f172a;
+  --v-text-muted: #64748b;
+  --v-text-soft: #94a3b8;
+  --v-border: #e2e8f0;
+  --v-border-strong: #cbd5e1;
+  --v-teal: #14b8a6;
+  --v-blue: #168bff;
+  /* Semantic */
+  --v-success: #14a97a;
+  --v-success-bg: #dcfce7;
+  --v-info: #0ea5e9;
+  --v-info-bg: #e0f2fe;
+  --v-warning: #d97706;
+  --v-warning-bg: #fef3c7;
+  --v-critical: #dc2626;
+  --v-critical-bg: #fee2e2;
+  --v-suspicious: #ea580c;
+  --v-suspicious-bg: #ffedd5;
+  /* Elevation */
+  --v-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --v-shadow: 0 4px 12px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --v-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
+  --v-radius: 12px;
+  --v-radius-lg: 18px;
+  --v-radius-sm: 8px;
+  /* Legacy demo tokens preserved */
   --ink: #16342f;
   --muted: #667c77;
   --green: #147d64;
@@ -8,68 +51,479 @@
   --line: #e0e9e6;
   --bg: #f3f7f5;
 }
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --v-bg: #07111f;
+  --v-surface: #0d1726;
+  --v-surface-2: #111e30;
+  --v-surface-3: #172740;
+  --v-text: #f8fafc;
+  --v-text-muted: #94a3b8;
+  --v-text-soft: #64748b;
+  --v-border: #1e2d42;
+  --v-border-strong: #2a3d59;
+  --v-teal: #2dd4bf;
+  --v-blue: #3b82f6;
+  --v-success: #22c55e;
+  --v-success-bg: rgba(34, 197, 94, 0.14);
+  --v-info: #38bdf8;
+  --v-info-bg: rgba(56, 189, 248, 0.14);
+  --v-warning: #fbbf24;
+  --v-warning-bg: rgba(251, 191, 36, 0.14);
+  --v-critical: #f87171;
+  --v-critical-bg: rgba(248, 113, 113, 0.14);
+  --v-suspicious: #fb923c;
+  --v-suspicious-bg: rgba(251, 146, 60, 0.14);
+  --v-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --v-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --v-shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --v-bg: #07111f;
+    --v-surface: #0d1726;
+    --v-surface-2: #111e30;
+    --v-surface-3: #172740;
+    --v-text: #f8fafc;
+    --v-text-muted: #94a3b8;
+    --v-text-soft: #64748b;
+    --v-border: #1e2d42;
+    --v-border-strong: #2a3d59;
+    --v-teal: #2dd4bf;
+    --v-blue: #3b82f6;
+    --v-success: #22c55e;
+    --v-success-bg: rgba(34, 197, 94, 0.14);
+    --v-info: #38bdf8;
+    --v-info-bg: rgba(56, 189, 248, 0.14);
+    --v-warning: #fbbf24;
+    --v-warning-bg: rgba(251, 191, 36, 0.14);
+    --v-critical: #f87171;
+    --v-critical-bg: rgba(248, 113, 113, 0.14);
+    --v-suspicious: #fb923c;
+    --v-suspicious-bg: rgba(251, 146, 60, 0.14);
+    --v-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --v-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+    --v-shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
 * {
   box-sizing: border-box;
 }
+
 body {
   margin: 0;
+  background: var(--v-bg);
+  color: var(--v-text);
+  font-family:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--v-brand-2);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  margin: 0;
+}
+
+/* ----- VITALIS reusable primitives ----- */
+.v-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.v-container-wide {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 640px) {
+  .v-container,
+  .v-container-wide {
+    padding: 0 16px;
+  }
+}
+
+.v-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 550;
+  font-size: 14px;
+  min-height: 40px;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.06s ease;
+  white-space: nowrap;
+}
+.v-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.v-btn-primary {
+  background: var(--v-brand-gradient);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(23, 60, 255, 0.25);
+}
+.v-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+.v-btn-secondary {
+  background: var(--v-surface);
+  color: var(--v-text);
+  border-color: var(--v-border);
+}
+.v-btn-secondary:hover:not(:disabled) {
+  background: var(--v-surface-2);
+  border-color: var(--v-border-strong);
+}
+.v-btn-ghost {
+  background: transparent;
+  color: var(--v-text-muted);
+}
+.v-btn-ghost:hover:not(:disabled) {
+  background: var(--v-surface-2);
+  color: var(--v-text);
+}
+.v-btn-danger {
+  background: var(--v-critical);
+  color: #fff;
+}
+
+.v-card {
+  background: var(--v-surface);
+  border: 1px solid var(--v-border);
+  border-radius: var(--v-radius);
+  box-shadow: var(--v-shadow-sm);
+}
+
+.v-card-lg {
+  background: var(--v-surface);
+  border: 1px solid var(--v-border);
+  border-radius: var(--v-radius-lg);
+  box-shadow: var(--v-shadow);
+}
+
+.v-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--v-surface);
+  border: 1px solid var(--v-border);
+  border-radius: 10px;
+  color: var(--v-text);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.v-input:hover {
+  border-color: var(--v-border-strong);
+}
+.v-input:focus {
+  outline: none;
+  border-color: var(--v-brand-2);
+  background: var(--v-surface);
+}
+.v-input::placeholder {
+  color: var(--v-text-soft);
+}
+
+.v-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 550;
+  background: var(--v-surface-2);
+  color: var(--v-text-muted);
+  border: 1px solid var(--v-border);
+  line-height: 1.4;
+}
+.v-badge-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.v-badge.success {
+  color: var(--v-success);
+  background: var(--v-success-bg);
+  border-color: transparent;
+}
+.v-badge.info {
+  color: var(--v-info);
+  background: var(--v-info-bg);
+  border-color: transparent;
+}
+.v-badge.warning {
+  color: var(--v-warning);
+  background: var(--v-warning-bg);
+  border-color: transparent;
+}
+.v-badge.critical {
+  color: var(--v-critical);
+  background: var(--v-critical-bg);
+  border-color: transparent;
+}
+.v-badge.suspicious {
+  color: var(--v-suspicious);
+  background: var(--v-suspicious-bg);
+  border-color: transparent;
+}
+
+.v-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--v-brand-2);
+  font-weight: 600;
+}
+
+.v-h1 {
+  font-size: clamp(30px, 4vw, 48px);
+  letter-spacing: -0.03em;
+  font-weight: 640;
+  line-height: 1.08;
+}
+.v-h2 {
+  font-size: clamp(22px, 2.4vw, 30px);
+  letter-spacing: -0.02em;
+  font-weight: 620;
+  line-height: 1.15;
+}
+.v-h3 {
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+.v-muted {
+  color: var(--v-text-muted);
+}
+.v-soft {
+  color: var(--v-text-soft);
+}
+
+.v-divider {
+  height: 1px;
+  width: 100%;
+  background: var(--v-border);
+}
+
+.v-brand-gradient-text {
+  background: var(--v-brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.v-glow-ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(32, 227, 194, 0.25), rgba(23, 60, 255, 0.05));
+  filter: blur(30px);
+  z-index: -1;
+}
+
+/* Sr-only */
+.v-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .v-landing-nav {
+    display: none !important;
+  }
+}
+@media (max-width: 520px) {
+  .v-header-signin {
+    display: none !important;
+  }
+}
+@media (max-width: 720px) {
+  .v-hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
+@media (max-width: 860px) {
+  .v-security-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+}
+
+/* Skeleton */
+@keyframes v-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.v-skel {
+  background: linear-gradient(90deg, var(--v-surface-2) 0%, var(--v-surface-3) 40%, var(--v-surface-2) 80%);
+  background-size: 200% 100%;
+  animation: v-shimmer 1.6s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* Subtle pulse for live indicators */
+@keyframes v-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+}
+.v-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--v-success);
+  animation: v-pulse 2s infinite;
+  display: inline-block;
+}
+
+/* ECG SVG stroke color hook */
+.v-ecg {
+  stroke: url(#v-ecg-gradient);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================================
+   Legacy demo styles (unchanged) — used only at /demo
+   ========================================================================= */
+.legacy-root {
+  --ink: #16342f;
+  --muted: #667c77;
+  --green: #147d64;
+  --surface: #fff;
+  --line: #e0e9e6;
+  --bg: #f3f7f5;
   background: var(--bg);
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
 }
-button,
-input,
-select {
-  font: inherit;
-}
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-button {
-  cursor: pointer;
-}
-button:disabled {
-  cursor: default;
-  opacity: 0.55;
-}
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-summary:focus-visible {
-  outline: 3px solid #4cae92;
-  outline-offset: 3px;
-}
-a {
+
+.legacy-root a {
   color: inherit;
   text-decoration: none;
 }
-button {
+.legacy-root ::selection {
+  background: #c5e8d9;
+}
+.legacy-root h1,
+.legacy-root h2,
+.legacy-root h3,
+.legacy-root p {
+  margin: 0;
+}
+.legacy-root h2 {
+  font-size: 17px;
+  letter-spacing: -0.35px;
+}
+.legacy-root h3 {
+  font-size: 14px;
+}
+.legacy-root button,
+.legacy-root a {
+  -webkit-tap-highlight-color: transparent;
+}
+.legacy-root button:focus-visible,
+.legacy-root a:focus-visible,
+.legacy-root input:focus-visible,
+.legacy-root select:focus-visible,
+.legacy-root summary:focus-visible {
+  outline: 3px solid #4cae92;
+  outline-offset: 3px;
+}
+.legacy-root svg {
+  flex-shrink: 0;
+}
+.legacy-root button {
   transition:
     background 0.18s,
     border-color 0.18s;
 }
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
-h2 {
-  font-size: 17px;
-  letter-spacing: -0.35px;
-}
-h3 {
-  font-size: 14px;
-}
-svg {
-  flex-shrink: 0;
-}
-::selection {
-  background: #c5e8d9;
-}
+
 .app-shell {
   min-height: 100vh;
   display: flex;
@@ -287,7 +741,7 @@ svg {
   font-size: 11px;
   font-weight: 600;
 }
-main {
+.legacy-root main {
   max-width: 1660px;
   margin: 0 auto;
   padding: 32px 34px 18px;
@@ -310,7 +764,7 @@ main {
   color: #8b9a93;
   letter-spacing: 1px;
 }
-h1 {
+.legacy-root h1 {
   font-size: 29px;
   font-weight: 600;
   letter-spacing: -1.1px;
@@ -1946,92 +2400,19 @@ h1 {
     margin-top: 3px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-/* Clinical readability: primary values retain hierarchy, supporting text remains legible. */
-.stat-top,
-.patient-identity strong,
-.detail-tabs button,
-.trend-heading h3 {
+.legacy-root .stat-top,
+.legacy-root .patient-identity strong,
+.legacy-root .detail-tabs button,
+.legacy-root .trend-heading h3 {
   font-size: 14px;
 }
-.patient-identity small,
-.patient-row-bottom > span:not(.badge),
-.queue-footer,
-.stat-card p,
-.section-heading p,
-.quiet-label,
-.detail-header p,
-.page-heading p,
-.vital-tile > span,
-.vital-tile .vital-baseline,
-.trend-heading > span,
-.reasoning li,
-.reasoning p,
-.detail-foot,
-.conflict-top p,
-.conflict-actions span,
-.upload-zone p,
-.upload-zone small,
-.demo-attack p,
-.document-card summary small,
-.gateway-policy p,
-.context-physiology p,
-.policy-note p,
-.method-note p,
-.page-footer,
-.burden-foot,
-.chart-legend span {
-  font-size: 12px;
-  color: #61776b;
-}
-.reasoning-title h3,
-.demo-attack strong,
-.security-signal strong {
-  font-size: 13px;
-}
-.badge {
-  font-size: 11px;
-}
-.component-grid span,
-.vital-tile strong small {
-  font-size: 11px;
-}
-.patient-row-bottom b {
-  font-size: 12px;
-}
-.vital-tile > span {
-  white-space: normal;
-}
-.reasoning li {
-  line-height: 1.8;
-}
-.reasoning-title > span:last-child {
-  display: none;
-}
-.patient-queue .queue-list {
+.legacy-root .patient-queue .queue-list {
   max-height: 650px;
   overflow-y: auto;
   scrollbar-width: thin;
 }
 @media (max-width: 740px) {
-  .patient-queue .queue-list {
+  .legacy-root .patient-queue .queue-list {
     max-height: 360px;
-  }
-  .vitals-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .vital-tile strong small {
-    display: inline;
-  }
-  .component-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    row-gap: 12px;
   }
 }

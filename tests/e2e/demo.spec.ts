@@ -10,7 +10,10 @@ test('deterioration → real PDF upload → quarantine → critical preserved �
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await request.post('/api/demo', { data: { action: 'reset' } });
-  await page.goto('/');
+  // The legacy synthetic dashboard moved from `/` to `/demo` when the new
+  // VITALIS landing page / auth shell was built; the legacy shared-password
+  // gate and every /api/* contract this test exercises are unchanged.
+  await page.goto('/demo');
   await expect(page.getByRole('heading', { name: 'Clinical command center' })).toBeVisible();
   await expect(page.locator('.patient-row')).toHaveCount(8);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

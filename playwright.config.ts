@@ -4,6 +4,8 @@ export default defineConfig({
   timeout: 90000,
   fullyParallel: false,
   workers: 1,
+  retries: 1,
+  globalSetup: './tests/e2e/global-setup.ts',
   use: {
     baseURL: 'http://127.0.0.1:3000',
     viewport: { width: 1366, height: 768 },

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="VITALIS">
+  <defs>
+    <linearGradient id="vitalis-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#20E3C2"/>
+      <stop offset="0.55" stop-color="#169BFF"/>
+      <stop offset="1" stop-color="#173CFF"/>
+    </linearGradient>
+    <linearGradient id="vitalis-line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.5" stop-color="#E7F9FF"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <filter id="vitalis-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feOffset dy="4" in="b" result="o"/>
+      <feComponentTransfer in="o" result="oo"><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode in="oo"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="url(#vitalis-bg)"/>
+  <g filter="url(#vitalis-shadow)" fill="none" stroke="url(#vitalis-line)" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M64 296 L152 296 L184 232 L232 358 L288 176 L336 296 L400 296"/>
+  </g>
+  <g fill="#EAF9FF">
+    <rect x="392" y="152" width="30" height="86" rx="9"/>
+    <rect x="364" y="180" width="86" height="30" rx="9"/>
+  </g>
+</svg>
