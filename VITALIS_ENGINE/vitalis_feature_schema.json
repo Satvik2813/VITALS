@@ -1,0 +1,78 @@
+{
+  "ordered_features": [
+    "heart_rate",
+    "spo2",
+    "systolic_bp",
+    "diastolic_bp",
+    "body_temperature_c",
+    "sleep_duration_hours",
+    "quality_of_sleep",
+    "physical_activity_level",
+    "daily_steps",
+    "resting_heart_rate",
+    "baseline_systolic_bp",
+    "baseline_diastolic_bp",
+    "age",
+    "bmi_category",
+    "stress_level",
+    "gender"
+  ],
+  "numeric_features": [
+    "heart_rate",
+    "spo2",
+    "systolic_bp",
+    "diastolic_bp",
+    "body_temperature_c",
+    "sleep_duration_hours",
+    "quality_of_sleep",
+    "physical_activity_level",
+    "daily_steps",
+    "resting_heart_rate",
+    "baseline_systolic_bp",
+    "baseline_diastolic_bp",
+    "age",
+    "stress_level"
+  ],
+  "categorical_features": [
+    "gender",
+    "bmi_category"
+  ],
+  "class_names": [
+    "Stable",
+    "Watch",
+    "Moderate",
+    "High",
+    "Critical"
+  ],
+  "categorical_values_seen_in_training": {
+    "gender": [
+      "Female",
+      "Male"
+    ],
+    "bmi_category": [
+      "Normal",
+      "Obese",
+      "Overweight"
+    ]
+  },
+  "missing_value_policy": "All 16 keys required; explicit None is imputed using fitted training statistics.",
+  "unknown_category_policy": "Warn and encode as all-zero within the corresponding one-hot feature block.",
+  "units": {
+    "heart_rate": "beats/min",
+    "spo2": "percent",
+    "systolic_bp": "mmHg",
+    "diastolic_bp": "mmHg",
+    "body_temperature_c": "degrees Celsius",
+    "sleep_duration_hours": "hours",
+    "daily_steps": "steps",
+    "resting_heart_rate": "beats/min",
+    "baseline_systolic_bp": "mmHg",
+    "baseline_diastolic_bp": "mmHg",
+    "age": "years",
+    "quality_of_sleep": "source-defined score; verify scale",
+    "physical_activity_level": "source-defined activity measure; verify units",
+    "stress_level": "source-defined score; verify scale",
+    "bmi_category": "source-defined category",
+    "gender": "source-defined category"
+  }
+}

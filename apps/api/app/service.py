@@ -9,6 +9,7 @@ from uuid import uuid4
 from sqlalchemy import insert, select, update
 
 from . import database as db
+from .audit import redact_metadata
 from .clinical import assess, fresh_engine, naive_signals
 from .gateway import analyze, digest, extract_facts, parse_file
 from .models import STATES, Reading
@@ -72,7 +73,7 @@ class Vitalis:
                 patient_id=patient_id,
                 event_type=event_type,
                 actor=actor,
-                details=details,
+                details=redact_metadata({"outcome": "success", **details}),
                 created_at=now(),
             )
         )
@@ -199,7 +200,10 @@ class Vitalis:
 
     def ingest(self, reading: Reading):
         with self.transaction() as conn:
-            return self.ingest_one(conn, reading)
+            result = self.ingest_one(conn, reading)
+            self.event(conn, "VITALS_INGESTED", reading.patient_id,
+                       {"recorded_at": reading.timestamp.isoformat(), "source": "api"})
+            return result
 
     def tick(self, force: bool = False):
         with self.transaction() as conn:

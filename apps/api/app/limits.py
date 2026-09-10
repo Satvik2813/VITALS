@@ -9,18 +9,21 @@ class BodyLimit:
         self.limit = limit
 
     async def __call__(self, scope, receive, send):
-        if scope["type"] != "http" or scope["method"] != "POST":
+        if scope["type"] != "http" or scope["method"] not in ("POST", "PUT", "PATCH", "DELETE"):
             return await self.app(scope, receive, send)
+        # JSON mutations have no reason to consume the full document allowance.
+        limit = self.limit if scope["path"].endswith("/documents") else 64 * 1024
         data = bytearray()
         while True:
             message = await receive()
             if message["type"] == "http.disconnect":
                 return
-            data.extend(message.get("body", b""))
-            if len(data) > self.limit:
-                return await JSONResponse({"detail": "Request exceeds 5 MB upload limit"}, status_code=413)(
+            chunk = message.get("body", b"")
+            if len(data) + len(chunk) > limit:
+                return await JSONResponse({"detail": "Request body exceeds size limit"}, status_code=413)(
                     scope, receive, send
                 )
+            data.extend(chunk)
             if not message.get("more_body", False):
                 break
         sent = False

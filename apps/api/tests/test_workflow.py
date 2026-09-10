@@ -132,6 +132,7 @@ def test_ingestion_duplicate_does_not_mutate_state(client):
 def test_production_token_boundary(tmp_path, monkeypatch):
     monkeypatch.setenv("DEMO_MODE", "false")
     monkeypatch.setenv("API_TOKEN", "test-only-token-" + "x" * 32)
+    monkeypatch.setenv("PLATFORM_DATABASE_URL", f"sqlite:///{tmp_path / 'platform.db'}")
     with TestClient(create_app(f"sqlite:///{tmp_path / 'production.db'}", tmp_path, False)) as c:
         assert c.get("/api/snapshot").status_code == 401
         assert c.get("/api/snapshot", headers={"Authorization": "Bearer wrong"}).status_code == 401

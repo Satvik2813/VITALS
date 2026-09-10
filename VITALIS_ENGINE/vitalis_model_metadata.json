@@ -1,0 +1,301 @@
+{
+  "model_name": "VITALIS wearable monitoring risk prototype",
+  "model_version": "1.0.0-prototype",
+  "model_type": "XGBoost multiclass classifier with sigmoid calibration",
+  "artifact_type": "CalibratedClassifierCV containing FrozenEstimator(Pipeline(ColumnTransformer, XGBClassifier))",
+  "target": "risk_level",
+  "feature_list": [
+    "heart_rate",
+    "spo2",
+    "systolic_bp",
+    "diastolic_bp",
+    "body_temperature_c",
+    "sleep_duration_hours",
+    "quality_of_sleep",
+    "physical_activity_level",
+    "daily_steps",
+    "resting_heart_rate",
+    "baseline_systolic_bp",
+    "baseline_diastolic_bp",
+    "age",
+    "bmi_category",
+    "stress_level",
+    "gender"
+  ],
+  "numeric_features": [
+    "heart_rate",
+    "spo2",
+    "systolic_bp",
+    "diastolic_bp",
+    "body_temperature_c",
+    "sleep_duration_hours",
+    "quality_of_sleep",
+    "physical_activity_level",
+    "daily_steps",
+    "resting_heart_rate",
+    "baseline_systolic_bp",
+    "baseline_diastolic_bp",
+    "age",
+    "stress_level"
+  ],
+  "categorical_features": [
+    "gender",
+    "bmi_category"
+  ],
+  "class_names": [
+    "Stable",
+    "Watch",
+    "Moderate",
+    "High",
+    "Critical"
+  ],
+  "class_to_id": {
+    "Stable": 0,
+    "Watch": 1,
+    "Moderate": 2,
+    "High": 3,
+    "Critical": 4
+  },
+  "training_timestamp_utc": "2026-09-09T05:55:38.780323+00:00",
+  "random_seed": 42,
+  "python_version": "3.13.15",
+  "package_versions": {
+    "numpy": "2.1.3",
+    "pandas": "2.2.3",
+    "matplotlib": "3.10.3",
+    "scikit-learn": "1.6.1",
+    "xgboost": "3.0.2",
+    "shap": "0.48.0",
+    "joblib": "1.5.1",
+    "scipy": "1.15.3"
+  },
+  "dataset_filename": "VITALIS_balanced_training_dataset.csv",
+  "dataset_sha256": "9cfbf08bf2aa79146c68b688af01976bc1145bfaabbd874f0ce686dfb12e6b0f",
+  "dataset_shape": [
+    50000,
+    20
+  ],
+  "dataset_disclaimer": "Evidence-informed synthetic dataset; rows are not real multimodal patients. Prototype monitoring labels are not universally validated clinical severity categories. Not clinically validated; not for autonomous diagnosis or emergency decision-making.",
+  "excluded_columns": [
+    "data_provenance",
+    "patient_id",
+    "predicted_disease",
+    "risk_level"
+  ],
+  "split_counts": {
+    "train": 35000,
+    "validation": 7500,
+    "test": 7500,
+    "validation_selection": 3750,
+    "validation_calibration": 3750
+  },
+  "split_protocol": "Stratified 70/15/15; validation split into equal selection and calibration halves; no final refit.",
+  "imbalance_decision": "Training largest/smallest ratio=1.000. Balanced enough: no class/sample weighting. No SMOTE or resampling.",
+  "class_weight_ratio_threshold": 1.2,
+  "selection_metric": "validation-selection Macro-F1; tie-break High/Critical mean recall then log loss",
+  "selected_parameters": {
+    "subsample": 0.85,
+    "reg_lambda": 5.0,
+    "reg_alpha": 0.5,
+    "n_estimators": 600,
+    "min_child_weight": 5,
+    "max_depth": 4,
+    "learning_rate": 0.1,
+    "colsample_bytree": 0.85
+  },
+  "retained_boosting_rounds": 258,
+  "search_candidates": 7,
+  "early_stopping_rounds": 30,
+  "probability_calibration": "one-vs-rest sigmoid, renormalized; disjoint validation-calibration subset; no sample weighting",
+  "decision_rule": "argmax calibrated probability; no test-tuned thresholds",
+  "confidence_semantics": "Winning calibrated synthetic-label model probability, not probability of a clinical event.",
+  "baseline_validation_metrics": {
+    "accuracy": 0.8925333333333333,
+    "macro_precision": 0.893077124442405,
+    "macro_recall": 0.8925333333333333,
+    "macro_f1": 0.8925848826514399,
+    "weighted_f1": 0.8925848826514398,
+    "high_recall": 0.8666666666666667,
+    "critical_recall": 0.9773333333333334,
+    "log_loss": 0.2595816270790703,
+    "multiclass_brier": 0.1584386217150944,
+    "macro_ovr_roc_auc": 0.9877184888888889
+  },
+  "training_metrics": {
+    "accuracy": 0.9941428571428571,
+    "macro_precision": 0.9942172502769479,
+    "macro_recall": 0.994142857142857,
+    "macro_f1": 0.9941422962079466,
+    "weighted_f1": 0.9941422962079465,
+    "high_recall": 1.0,
+    "critical_recall": 1.0,
+    "log_loss": 0.023413987949931405,
+    "multiclass_brier": 0.009664052652508753,
+    "macro_ovr_roc_auc": 0.999885219387755
+  },
+  "validation_selection_metrics": {
+    "accuracy": 0.9933333333333333,
+    "macro_precision": 0.9933611773428707,
+    "macro_recall": 0.9933333333333334,
+    "macro_f1": 0.993333093324693,
+    "weighted_f1": 0.993333093324693,
+    "high_recall": 1.0,
+    "critical_recall": 1.0,
+    "log_loss": 0.02814125974978998,
+    "multiclass_brier": 0.01163639942276117,
+    "macro_ovr_roc_auc": 0.9997409777777777
+  },
+  "test_metrics": {
+    "accuracy": 0.9921333333333333,
+    "macro_precision": 0.9921458299095225,
+    "macro_recall": 0.9921333333333333,
+    "macro_f1": 0.9921347486420917,
+    "weighted_f1": 0.9921347486420916,
+    "high_recall": 1.0,
+    "critical_recall": 1.0,
+    "log_loss": 0.031701807510236726,
+    "multiclass_brier": 0.013216280575518038,
+    "macro_ovr_roc_auc": 0.9997535111111112,
+    "top_label_ece_10_bins": 0.002670036446955794
+  },
+  "high_risk_test_review": [
+    {
+      "class": "High",
+      "recall": 1.0,
+      "support": 1500,
+      "misclassified": 0,
+      "assigned_lower_category": 0,
+      "predicted_stable_or_watch": 0
+    },
+    {
+      "class": "Critical",
+      "recall": 1.0,
+      "support": 1500,
+      "misclassified": 0,
+      "assigned_lower_category": 0,
+      "predicted_stable_or_watch": 0
+    }
+  ],
+  "important_features_gain": {
+    "systolic_bp": 0.30089643597602844,
+    "heart_rate": 0.2167028933763504,
+    "body_temperature_c": 0.16819588840007782,
+    "spo2": 0.1581314206123352,
+    "diastolic_bp": 0.12670041620731354,
+    "bmi_category": 0.00455178739503026,
+    "gender": 0.0033336959313601255,
+    "baseline_diastolic_bp": 0.002863259520381689
+  },
+  "important_features_shap": {
+    "systolic_bp": 1.3737751245498657,
+    "spo2": 1.0913770198822021,
+    "body_temperature_c": 1.070461392402649,
+    "diastolic_bp": 1.0680007934570312,
+    "heart_rate": 1.0160167217254639,
+    "age": 0.012275530025362968,
+    "baseline_diastolic_bp": 0.010700134560465813,
+    "sleep_duration_hours": 0.010099831968545914
+  },
+  "shap_output": "Underlying retained XGBoost raw margin, before probability calibration",
+  "categorical_values": {
+    "gender": [
+      "Female",
+      "Male"
+    ],
+    "bmi_category": [
+      "Normal",
+      "Obese",
+      "Overweight"
+    ]
+  },
+  "training_numeric_ranges": {
+    "heart_rate": {
+      "min": 42.5,
+      "max": 165.0,
+      "median": 96.5
+    },
+    "spo2": {
+      "min": 82.0,
+      "max": 100.0,
+      "median": 94.0
+    },
+    "systolic_bp": {
+      "min": 95.0,
+      "max": 205.0,
+      "median": 136.9
+    },
+    "diastolic_bp": {
+      "min": 58.6,
+      "max": 128.0,
+      "median": 87.2
+    },
+    "body_temperature_c": {
+      "min": 35.87,
+      "max": 40.5,
+      "median": 37.54
+    },
+    "sleep_duration_hours": {
+      "min": 5.8,
+      "max": 8.5,
+      "median": 8.0
+    },
+    "quality_of_sleep": {
+      "min": 4.0,
+      "max": 9.0,
+      "median": 9.0
+    },
+    "physical_activity_level": {
+      "min": 30.0,
+      "max": 90.0,
+      "median": 75.0
+    },
+    "daily_steps": {
+      "min": 3000.0,
+      "max": 10000.0,
+      "median": 3700.0
+    },
+    "resting_heart_rate": {
+      "min": 65.0,
+      "max": 86.0,
+      "median": 85.0
+    },
+    "baseline_systolic_bp": {
+      "min": 115.0,
+      "max": 142.0,
+      "median": 139.0
+    },
+    "baseline_diastolic_bp": {
+      "min": 75.0,
+      "max": 95.0,
+      "median": 91.0
+    },
+    "age": {
+      "min": 27.0,
+      "max": 59.0,
+      "median": 49.0
+    },
+    "stress_level": {
+      "min": 3.0,
+      "max": 8.0,
+      "median": 3.0
+    }
+  },
+  "data_quality_flags": {
+    "outside_review_bounds": 0,
+    "impossible_rows": 0,
+    "feature_duplicate_rows": 0
+  },
+  "overfitting_assessment": "Train minus test Macro-F1 gap: +0.0020. No large gap by the predeclared 0.03 heuristic; this does not prove real-world generalization.",
+  "synthetic_interpretation": "WARNING: performance is suspiciously close to perfect (>=0.98). Class-specific physiological ranges, shallow-rule probe performance and repeated context templates must be considered. The original label-generation code is unavailable, so reconstruction is a plausible explanation, not a proven mechanism. These scores are not proof of clinical intelligence. External real-world, patient-disjoint and temporal validation is required before any clinical claim.",
+  "limitations": [
+    "Synthetic labels may encode deterministic generation rules.",
+    "No prospective, external, patient-grouped or temporal clinical validation.",
+    "No verified source-template identities; repeated context profiles can cross splits.",
+    "Balanced synthetic priors differ from deployment prevalence; calibration may drift.",
+    "Limited age/profile and device coverage; sensor noise, missingness and domain shift are underrepresented.",
+    "Gender/BMI categories and activity/quality/stress scale definitions need source verification.",
+    "Subgroup fairness, outcome utility and uncertainty intervals have not been established.",
+    "SHAP explains learned associations, not causal or clinical mechanisms."
+  ],
+  "model_artifact_sha256": "01540cd62bce09911c2ff863251abcd4b44667d612275f152bfabcfb5f2995ef"
+}
