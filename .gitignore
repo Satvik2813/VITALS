@@ -4,6 +4,8 @@ node_modules/
 __pycache__/
 .pytest_cache/
 .pytest-work/
+.pytest-security-baseline/
+.pytest-security-tools/
 .ruff_cache/
 *.pyc
 .env
@@ -16,3 +18,4 @@ test-results/
 playwright-report/
 *.log
 supabase/.temp/
+.mcp.json

@@ -9,3 +9,4 @@ data
 apps/web/.next
 test-results
 playwright-report
+VITALIS_ENGINE/__pycache__

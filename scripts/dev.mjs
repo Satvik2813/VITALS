@@ -1,6 +1,26 @@
 import { spawn } from 'node:child_process';
 import { python, root } from './python.mjs';
 import path from 'node:path';
+import fs from 'node:fs';
+
+// Load repo-root .env into process.env BEFORE spawning children so Turbopack
+// (which snapshots env at boot) can inline NEXT_PUBLIC_* into client bundles.
+// Next.js's own loadEnvConfig inside next.config.ts is too late for Turbopack.
+const envPath = path.join(root, '.env');
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
+    const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)\s*$/i);
+    if (!m) continue;
+    let value = m[2];
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    if (process.env[m[1]] === undefined) process.env[m[1]] = value;
+  }
+}
 const children = [
   spawn(
     python,

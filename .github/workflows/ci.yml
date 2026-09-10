@@ -20,6 +20,15 @@ jobs:
       - run: npm run fixtures
       - run: npm test
       - run: npm run lint
+      - run: npm run test:redirect
+      # PostgreSQL RLS/grant/schema checks against disposable PGlite. This is
+      # the only job that sees real CHECK constraints -- the Python suite runs
+      # on SQLite, whose schema mirror carries none -- so it is what catches a
+      # drift between an enumerated column domain and the literals the
+      # application writes.
+      - name: Install the isolated PGlite test runtime
+        run: npm install --prefix .pytest-security-tools --no-package-lock --ignore-scripts @electric-sql/pglite@0.3.14
+      - run: npm run test:rls
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - name: Start local demo and run browser flow

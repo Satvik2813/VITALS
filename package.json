@@ -14,9 +14,12 @@
     "lint": "node scripts/python.mjs -m ruff check apps/api scripts && npm run lint --workspace apps/web",
     "build": "npm run build --workspace apps/web",
     "fixtures": "node scripts/python.mjs scripts/generate_documents.py",
+    "seed": "node scripts/python.mjs scripts/seed_demo.py",
     "test:e2e": "playwright test",
     "format": "prettier --write apps/web scripts/*.mjs tests playwright.config.ts *.json docs/*.md README.md DEMO_SCRIPT.md && node scripts/python.mjs -m ruff format apps/api scripts",
-    "format:check": "prettier --check apps/web scripts/*.mjs tests playwright.config.ts *.json docs/*.md README.md DEMO_SCRIPT.md && node scripts/python.mjs -m ruff format --check apps/api scripts"
+    "format:check": "prettier --check apps/web scripts/*.mjs tests playwright.config.ts *.json docs/*.md README.md DEMO_SCRIPT.md && node scripts/python.mjs -m ruff format --check apps/api scripts",
+    "test:rls": "node scripts/test_rls.mjs",
+    "test:redirect": "node scripts/test_safe_redirect.mjs"
   },
   "engines": {
     "node": ">=22"

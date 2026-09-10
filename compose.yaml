@@ -1,16 +1,52 @@
+# Local container smoke-test for the VITALIS backend. NOT the production
+# deployment path.
+#
+# Production is: Vercel (apps/web) + a persistent container host for this
+# image + hosted Supabase Postgres. See docs/DEPLOYMENT.md, which is the only
+# document that describes a real deployment.
+#
+# This file exists to verify that the image built from apps/api/Dockerfile
+# boots correctly with production-shaped settings (DEMO_MODE=false), which is
+# why it demands the same variables the app itself demands. It previously set
+# DEMO_MODE=false without PLATFORM_DATABASE_URL or SUPABASE_URL, so the
+# container could not start at all and anyone following it hit a stack trace;
+# the `:?` forms below fail immediately with a readable message instead.
+#
+# Usage:
+#   export API_TOKEN=...            # >= 32 random chars
+#   export PLATFORM_DATABASE_URL=postgresql+psycopg://...?sslmode=require
+#   export SUPABASE_URL=https://<ref>.supabase.co
+#   docker compose up --build
 services:
   api:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    ports: ["127.0.0.1:8000:8000"]
+    ports: ['127.0.0.1:8000:8000']
     environment:
+      # Legacy synthetic demo store. Safe to leave as the bundled SQLite file;
+      # it backs /demo and the legacy /api/* endpoints only.
       DATABASE_URL: ${DATABASE_URL:-sqlite:////app/data/vitalis.db}
       DATA_DIR: /app/data
-      DEMO_MODE: "false"
+      DEMO_MODE: 'false'
       API_TOKEN: ${API_TOKEN:?Set API_TOKEN to a random value of at least 32 characters}
-      SIMULATOR_AUTOSTART: "true"
-    volumes: ["vitalis-data:/app/data"]
+      # The v1 authenticated platform. Required whenever DEMO_MODE=false --
+      # app/main.py refuses to start rather than silently serving real
+      # onboarding/patient data out of the SQLite demo store.
+      PLATFORM_DATABASE_URL: ${PLATFORM_DATABASE_URL:?Set PLATFORM_DATABASE_URL to the hosted Postgres SQLAlchemy URL; DEMO_MODE=false must never fall back to the SQLite demo store}
+      # Supabase project URL. Without it every /api/v1 request 503s on auth,
+      # because issuer and JWKS are derived only from this trusted value.
+      SUPABASE_URL: ${SUPABASE_URL:?Set SUPABASE_URL to your Supabase project URL so JWT verification can resolve issuer/JWKS}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET:-}
+      # Browser origins allowed to call this service directly. Empty disables
+      # cross-origin access, which is correct when only the Next proxy calls it.
+      VITALIS_CORS_ORIGINS: ${VITALIS_CORS_ORIGINS:-}
+      # Shared secret that lets the Next.js proxy declare the real client
+      # address for rate limiting. Without it every proxied request shares one
+      # rate-limit bucket. See docs/DEPLOYMENT.md.
+      VITALIS_PROXY_SECRET: ${VITALIS_PROXY_SECRET:-}
+      SIMULATOR_AUTOSTART: ${SIMULATOR_AUTOSTART:-false}
+    volumes: ['vitalis-data:/app/data']
     restart: unless-stopped
 volumes:
   vitalis-data:
