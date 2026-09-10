@@ -211,6 +211,18 @@ def new_uuid() -> str:
     return str(uuid.uuid4())
 
 
+def _normalize_postgres_url(url: str) -> str:
+    """Force SQLAlchemy to use psycopg v3 (the driver we install) instead of
+    psycopg2 (the default for the bare `postgresql://` scheme). Preserves
+    credentials, host, port, database, and query parameters unchanged.
+    """
+    if url.startswith("postgresql://"):
+        return "postgresql+psycopg://" + url[len("postgresql://"):]
+    if url.startswith("postgres://"):
+        return "postgresql+psycopg://" + url[len("postgres://"):]
+    return url
+
+
 def connect(url: str):
     """Return a SQLAlchemy engine, creating tables on SQLite for local/tests.
     Production Postgres is provisioned by the checked-in migration.
@@ -226,5 +238,5 @@ def connect(url: str):
 
         metadata.create_all(engine)
     else:
-        engine = create_engine(url, pool_pre_ping=True, future=True)
+        engine = create_engine(_normalize_postgres_url(url), pool_pre_ping=True, future=True)
     return engine
